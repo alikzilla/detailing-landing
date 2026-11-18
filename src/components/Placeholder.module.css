@@ -1,0 +1,13 @@
+.ph{position:relative;overflow:hidden;background:linear-gradient(135deg,#2a2a2a 0%,#3b3b3b 50%,#2a2a2a 100%);
+  display:flex;align-items:center;justify-content:center;text-align:center;color:#bdbdbd}
+.ph::before,.ph::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top right,transparent calc(50% - .5px),rgba(255,255,255,.08) 50%,transparent calc(50% + .5px)),
+             linear-gradient(to top left,transparent calc(50% - .5px),rgba(255,255,255,.08) 50%,transparent calc(50% + .5px))}
+.ph::after{background:none;border:1px dashed rgba(255,255,255,.14);inset:10px}
+.inner{position:relative;z-index:1;padding:16px;max-width:34ch}
+.num{display:block;font-family:var(--serif);font-size:clamp(40px,6vw,88px);line-height:1;color:#e6e6e6}
+.text{display:block;margin-top:10px;font-size:12px;line-height:1.5;letter-spacing:.04em;color:#d6d6d6}
+.tag{position:absolute;top:18px;left:18px;z-index:1;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c4c4c4}
+.logo{border-radius:50%;width:84px;height:84px;flex:none}
+.logo .num{font-size:26px}
+.logo::after{inset:6px;border-radius:50%}

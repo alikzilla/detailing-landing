@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanta Atelier — practice build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070707; --bg2:#0e0e0e; --fg:#ecebe7; --mute:#8d8b86; --line:rgba(255,255,255,.12);
+  --accent:#c8402e;
+  --serif:"Instrument Serif", Georgia, serif;
+  --sans:"Manrope", system-ui, sans-serif;
+  --gut:clamp(16px,3vw,40px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.is-locked{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--mute);font-weight:500}
+.serif{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+
+/* grain overlay */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- PLACEHOLDER IMAGE ---------- */
+.ph{position:relative;overflow:hidden;background:
+  linear-gradient(135deg,#2a2a2a 0%,#3b3b3b 50%,#2a2a2a 100%);
+  display:flex;align-items:center;justify-content:center;text-align:center;color:#bdbdbd}
+.ph::before,.ph::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top right,transparent calc(50% - .5px),rgba(255,255,255,.08) 50%,transparent calc(50% + .5px)),
+             linear-gradient(to top left,transparent calc(50% - .5px),rgba(255,255,255,.08) 50%,transparent calc(50% + .5px))}
+.ph::after{background:none;border:1px dashed rgba(255,255,255,.14);inset:10px}
+.ph__in{position:relative;z-index:1;padding:16px;max-width:34ch}
+.ph__n{display:block;font-family:var(--serif);font-size:clamp(40px,6vw,88px);line-height:1;color:#e6e6e6}
+.ph__t{display:block;margin-top:10px;font-size:12px;line-height:1.5;letter-spacing:.04em;color:#d6d6d6}
+.ph__tag{position:absolute;top:18px;left:18px;z-index:1;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c4c4c4}
+.ph--logo{border-radius:50%;width:84px;height:84px;flex:none}
+.ph--logo .ph__n{font-size:26px}
+.ph--logo::after{inset:6px;border-radius:50%}
+
+/* ---------- LOADER ---------- */
+.loader{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--gut)}
+.loader__mark{position:absolute;top:28px;left:50%;transform:translateX(-50%)}
+.loader__line{max-width:46ch;text-align:center;font-size:11px;line-height:2.2;letter-spacing:.34em;text-transform:uppercase;font-weight:500}
+.loader__line .w{display:inline-block;filter:blur(10px);opacity:0}
+.loader__bar{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);width:140px;height:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.loader__bar span{display:block;height:100%;width:100%;background:var(--fg);transform-origin:left;transform:scaleX(0)}
+.loader__actions{position:absolute;bottom:60px;display:flex;gap:28px;opacity:0;pointer-events:none}
+.loader__actions button{font-family:var(--serif);font-size:15px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:4px;transition:border-color .3s,color .3s}
+.loader__actions button:hover{border-color:var(--fg)}
+.loader__actions button.ghost{color:var(--mute)}
+
+/* ---------- HEADER ---------- */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:22px var(--gut);mix-blend-mode:difference}
+.hdr__social{display:flex;gap:14px}
+.hdr__social a{width:18px;height:18px;display:grid;place-items:center;border:1px solid #fff;border-radius:3px;font-size:11px;font-weight:600}
+.hdr__logo{display:flex;flex-direction:column;align-items:center;gap:4px}
+.hdr__logo small{font-size:11px;letter-spacing:.42em;font-weight:600;overflow:hidden;max-height:0;transition:max-height .5s}
+.hdr.show-word .hdr__logo small{max-height:14px}
+.hdr__menu{justify-self:end;display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600}
+.burger{width:16px;height:8px;position:relative}
+.burger i{position:absolute;left:0;right:0;height:1px;background:#fff;transition:transform .4s}
+.burger i:first-child{top:0}.burger i:last-child{bottom:0}
+.menu-open .burger i:first-child{transform:translateY(3.5px) rotate(45deg)}
+.menu-open .burger i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+
+/* ---------- MENU OVERLAY ---------- */
+.menu{position:fixed;inset:0;z-index:55;background:#0b0b0b;clip-path:inset(0 0 100% 0);display:grid;grid-template-columns:1.1fr 1fr;padding:110px var(--gut) 40px;gap:var(--gut)}
+.menu__links{display:flex;flex-direction:column;justify-content:center;gap:6px}
+.menu__links a{font-family:var(--serif);font-size:clamp(44px,7vw,104px);line-height:1;display:block;overflow:hidden}
+.menu__links a span{display:inline-block;transform:translateY(110%);transition:color .3s}
+.menu__links a:hover span{color:var(--mute);font-style:italic}
+.menu__side{display:flex;flex-direction:column;justify-content:space-between}
+.menu__side .ph{flex:1;min-height:200px}
+.menu__meta{display:flex;justify-content:space-between;margin-top:20px;font-size:12px;color:var(--mute)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;height:100vh;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1c1c1c 0%,#050505 60%)}
+.hero__cars{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2vw;padding:0 var(--gut)}
+.hero__cars .ph{width:30vw;aspect-ratio:4/3;filter:brightness(.25);border-radius:2px}
+.hero__cars .ph:nth-child(2){background:linear-gradient(135deg,#4a2a26,#6b3a33 50%,#4a2a26)}
+.hero__title{position:absolute;left:0;right:0;top:16vh;text-align:center;z-index:3;pointer-events:none}
+.hero__title h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,8vw,128px);line-height:.95}
+.hero__title h1 .w{display:inline-block;opacity:0;filter:blur(14px)}
+.hero__sub{position:absolute;bottom:70px;left:0;right:0;text-align:center;z-index:3;font-size:13px;letter-spacing:.06em;color:var(--mute);opacity:0}
+.hero__scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:3;width:1px;height:28px;background:linear-gradient(var(--fg),transparent);animation:drip 2s infinite}
+@keyframes drip{0%{transform:translateX(-50%) scaleY(0);transform-origin:top}50%{transform:translateX(-50%) scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:translateX(-50%) scaleY(0);transform-origin:bottom}}
+.hero__bigword{position:absolute;bottom:-4vw;left:0;right:0;text-align:center;font-family:var(--serif);font-size:28vw;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(200,64,46,.25);z-index:1;pointer-events:none;white-space:nowrap}
+
+/* ---------- INTRO (pinned image grows) ---------- */
+.intro{position:relative;height:100vh;overflow:hidden;display:grid;place-items:center}
+.intro__words{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--serif);font-size:clamp(48px,9vw,140px);line-height:1;text-align:center;z-index:1}
+.intro__words .w{display:inline-block;filter:blur(12px);opacity:.15}
+.intro__img{position:relative;z-index:2;width:28vw;height:21vw}
+.intro__caption{position:absolute;bottom:40px;left:0;right:0;text-align:center;z-index:3;font-size:13px;color:var(--mute)}
+
+/* ---------- MARQUES ---------- */
+.marques{position:relative;padding:18vh var(--gut);display:grid;grid-template-columns:1.3fr 1fr;gap:6vw;align-items:center;border-top:1px solid var(--line)}
+.marques__row{display:flex;gap:32px;flex-wrap:wrap}
+.marques__row .ph--logo{opacity:0;transform:translateY(30px)}
+.marques p{font-size:clamp(16px,1.4vw,20px);line-height:1.6;max-width:36ch}
+
+/* ---------- BUTTON ---------- */
+.btn{display:inline-flex;align-items:center;gap:14px;margin-top:28px;padding:16px 26px;border:1px solid var(--line);font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;position:relative;overflow:hidden;transition:color .5s}
+.btn::before{content:"";position:absolute;inset:0;background:var(--fg);transform:scaleY(0);transform-origin:bottom;transition:transform .5s cubic-bezier(.7,0,.2,1);z-index:-1}
+.btn:hover{color:#000}
+.btn:hover::before{transform:scaleY(1)}
+.btn{isolation:isolate}
+.btn i{width:18px;height:1px;background:currentColor;position:relative}
+.btn i::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-top:1px solid currentColor;border-right:1px solid currentColor;transform:rotate(45deg)}
+
+/* ---------- PILLARS (pinned slider) ---------- */
+.pillars{position:relative;height:100vh;overflow:hidden;background:#1a1a1a}
+.pillars__bg{position:absolute;inset:-5%;filter:blur(30px) brightness(.5)}
+.pillars__bg .ph{position:absolute;inset:0;opacity:0}
+.pillars__bg .ph:first-child{opacity:1}
+.pillars__inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center;padding:0 8vw}
+.pillars__media{position:relative;aspect-ratio:1/1;max-height:70vh}
+.pillars__media .ph{position:absolute;inset:0;clip-path:inset(100% 0 0 0)}
+.pillars__media .ph:first-child{clip-path:inset(0 0 0 0)}
+.pillars__count{font-family:var(--serif);font-size:22px;display:flex;align-items:baseline;gap:4px;height:28px;overflow:hidden}
+.pillars__count .cur{display:inline-block;height:28px;overflow:hidden}
+.pillars__count .cur span{display:block;line-height:28px}
+.pillars__titles{position:relative;height:clamp(60px,7vw,110px);margin:18px 0 10px}
+.pillars__titles h3{position:absolute;inset:0;font-family:var(--serif);font-weight:400;font-size:clamp(52px,7vw,110px);line-height:1;opacity:0;filter:blur(12px)}
+.pillars__titles h3:first-child{opacity:1;filter:blur(0)}
+.pillars__texts{position:relative;min-height:110px}
+.pillars__texts p{position:absolute;inset:0;font-size:16px;line-height:1.6;max-width:38ch;opacity:0}
+.pillars__texts p:first-child{opacity:1}
+.pillars__progress{position:absolute;bottom:40px;left:8vw;right:8vw;height:1px;background:var(--line);z-index:2}
+.pillars__progress span{display:block;height:100%;background:var(--fg);transform-origin:left;transform:scaleX(0)}
+
+/* ---------- STATEMENT ---------- */
+.statement{position:relative;padding:20vh var(--gut) 16vh;display:grid;grid-template-columns:1.4fr 1fr;gap:6vw;align-items:end}
+.statement h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.6vw,92px);line-height:1.02}
+.statement h2 .w{opacity:.18;display:inline-block}
+.statement__body{font-size:16px;line-height:1.7;color:var(--mute);max-width:42ch;margin-top:36px}
+.statement__img{aspect-ratio:3/4;overflow:hidden}
+.statement__img .ph{width:100%;height:120%}
+
+/* ---------- SERVICES ---------- */
+.services{position:relative}
+.svc{position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+.svc__text{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8vw 0 var(--gut);background:var(--bg2)}
+.svc__text h3{font-family:var(--serif);font-weight:400;font-size:clamp(48px,5vw,84px);line-height:1;margin:18px 0 22px}
+.svc__text p{font-size:16px;line-height:1.7;max-width:36ch;color:#c9c7c2}
+.svc__text .svc__num{position:absolute;top:110px;right:8vw;font-family:var(--serif);font-size:16px;color:var(--mute)}
+.svc__media{position:relative;height:100vh;overflow:hidden}
+.svc__media .ph{position:absolute;inset:0;clip-path:inset(30% 15% 30% 15%)}
+.svc__media .ph .ph__in{transform:scale(1.2)}
+
+/* ---------- TOP-DOWN ---------- */
+.topdown{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:3vw;background:#050505}
+.topdown .ph{flex:none;height:120vh;width:26vw}
+.topdown .td-c{background:linear-gradient(180deg,#4a2a26,#6b3a33 50%,#4a2a26);width:34vw;z-index:2}
+.topdown__label{position:absolute;bottom:40px;left:0;right:0;text-align:center;z-index:3}
+
+/* ---------- CTA ---------- */
+.cta{position:relative;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 var(--gut)}
+.cta__bg{position:absolute;inset:-10%;filter:blur(40px) brightness(.35);display:flex;align-items:center;justify-content:center;gap:4vw}
+.cta__bg .ph{width:26vw;aspect-ratio:4/3}
+.cta__bg .ph:nth-child(2){background:#7a2e22}
+.cta>*:not(.cta__bg){position:relative;z-index:2}
+.cta h2{font-family:var(--serif);font-weight:400;font-size:clamp(56px,8vw,130px);line-height:.95;margin-top:20px}
+.cta h2 .w{display:inline-block;opacity:0;transform:translateY(40px);filter:blur(10px)}
+.cta__top{position:absolute!important;bottom:40px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600}
+
+/* ---------- FOOTER ---------- */
+.ftr{border-top:1px solid var(--line);padding:70px var(--gut) 30px}
+.ftr__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--gut)}
+.ftr__grid h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);font-weight:500;margin-bottom:16px}
+.ftr__grid li{list-style:none;font-size:14px;line-height:2}
+.ftr__grid a{position:relative}
+.ftr__grid a::after{content:"";position:absolute;left:0;bottom:-2px;height:1px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .4s}
+.ftr__grid a:hover::after{transform:scaleX(1);transform-origin:left}
+.ftr__brand{font-family:var(--serif);font-size:clamp(70px,16vw,260px);line-height:.85;margin-top:60px;letter-spacing:-.02em}
+.ftr__bottom{display:flex;justify-content:space-between;margin-top:30px;font-size:12px;color:var(--mute);gap:16px;flex-wrap:wrap}
+
+/* ---------- UI bits ---------- */
+.progress{position:fixed;bottom:0;left:0;height:2px;width:100%;background:var(--fg);transform-origin:left;transform:scaleX(0);z-index:70;mix-blend-mode:difference}
+.cursor{position:fixed;top:0;left:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;z-index:101;opacity:0;transition:width .3s,height .3s,margin .3s,opacity .3s}
+.cursor.on{opacity:1}
+.cursor.big{margin:-30px 0 0 -30px}
+.cursor.big{width:60px;height:60px}
+@media (hover:none){.cursor{display:none}}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:820px){
+  .hdr__social{visibility:hidden}
+  .hdr{grid-template-columns:1fr auto 1fr}
+  .menu{grid-template-columns:1fr}.menu__side{display:none}
+  .hero__cars{gap:8px}.hero__cars .ph{width:31vw}
+  .hero__cars .ph .ph__t{display:none}
+  .intro__img{width:60vw;height:45vw}
+  .marques,.statement{grid-template-columns:1fr}
+  .pillars__inner{grid-template-columns:1fr;gap:28px;padding:90px var(--gut) 80px;align-content:center}
+  .pillars__media{max-height:38vh;aspect-ratio:4/3}
+  .svc{grid-template-columns:1fr}
+  .svc__text{position:relative;height:auto;padding:90px var(--gut) 50px}
+  .svc__media{height:70vh}
+  .topdown .ph{width:30vw}.topdown .td-c{width:40vw}
+  .cta__bg .ph{width:40vw}
+  .ftr__grid{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero__scroll{animation:none}
+}
+</style>
+</head>
+<body class="is-locked">
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader__mark">
+    <svg width="34" height="22" viewBox="0 0 34 22" fill="none"><path d="M1 1h8l8 13 8-13h8L17 21z" fill="#fff"/></svg>
+  </div>
+  <p class="loader__line split">Precision craft for cars that deserve a second signature, not a second-hand look.</p>
+  <div class="loader__actions" id="loaderActions">
+    <button id="enterBtn">Enter</button>
+    <button class="ghost" id="enterBtn2">Skip intro</button>
+  </div>
+  <div class="loader__bar"><span id="loaderBar"></span></div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr" id="hdr">
+  <div class="hdr__social">
+    <a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="YouTube">YT</a><a href="#" aria-label="TikTok">TT</a>
+  </div>
+  <a href="#top" class="hdr__logo" aria-label="Home">
+    <svg width="30" height="19" viewBox="0 0 34 22" fill="none"><path d="M1 1h8l8 13 8-13h8L17 21z" fill="#fff"/></svg>
+    <small>VANTA</small>
+  </a>
+  <button class="hdr__menu" id="menuBtn" aria-expanded="false">
+    <span id="menuLabel">Menu</span><span class="burger"><i></i><i></i></span>
+  </button>
+</header>
+
+<!-- MENU -->
+<nav class="menu" id="menu" aria-hidden="true">
+  <div class="menu__links">
+    <a href="#top"><span>Home</span></a>
+    <a href="#pillars"><span>Approach</span></a>
+    <a href="#services"><span>Services</span></a>
+    <a href="#builds"><span>Builds</span></a>
+    <a href="#contact"><span>Contact</span></a>
+  </div>
+  <div class="menu__side">
+    <div class="ph"><span class="ph__tag">Image</span><div class="ph__in"><span class="ph__n">M1</span><span class="ph__t">Menu image: moody workshop shot, car under a single overhead light</span></div></div>
+    <div class="menu__meta"><span>hello@vanta.example</span><span>Mon–Sat · 09:00–19:00</span></div>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero__bigword">VANTA</div>
+    <div class="hero__cars">
+      <div class="ph"><div class="ph__in"><span class="ph__n">01</span><span class="ph__t">Black SUV, front view, dark studio, cut-out on black</span></div></div>
+      <div class="ph"><div class="ph__in"><span class="ph__n">02</span><span class="ph__t">Hero sports car (red), front view, centred, cut-out on black</span></div></div>
+      <div class="ph"><div class="ph__in"><span class="ph__n">03</span><span class="ph__t">Grey off-roader, front view, dark studio, cut-out on black</span></div></div>
+    </div>
+    <div class="hero__title"><h1 class="split">Made for drivers<br>who notice everything</h1></div>
+    <p class="hero__sub">An independent studio for bespoke styling, interiors and protection.</p>
+    <div class="hero__scroll"></div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="intro">
+    <div class="intro__words"><span class="split">Quiet details,</span><span class="split">loud presence.</span></div>
+    <div class="intro__img ph"><span class="ph__tag">Image</span><div class="ph__in"><span class="ph__n">04</span><span class="ph__t">Macro: hand-stitched leather with coloured thread, shallow depth of field</span></div></div>
+    <p class="intro__caption">Every build starts with the smallest decision.</p>
+  </section>
+
+  <!-- MARQUES -->
+  <section class="marques">
+    <div>
+      <p class="eyebrow" style="margin-bottom:28px">Marques we work with</p>
+      <div class="marques__row">
+        <div class="ph ph--logo"><div class="ph__in"><span class="ph__n">L1</span></div></div>
+        <div class="ph ph--logo"><div class="ph__in"><span class="ph__n">L2</span></div></div>
+        <div class="ph ph--logo"><div class="ph__in"><span class="ph__n">L3</span></div></div>
+        <div class="ph ph--logo"><div class="ph__in"><span class="ph__n">L4</span></div></div>
+        <div class="ph ph--logo"><div class="ph__in"><span class="ph__n">L5</span></div></div>
+      </div>
+      <p class="ph__t" style="margin-top:16px">L1–L5: brand logos in white, round badges (placeholders)</p>
+    </div>
+    <div>
+      <p>We sweat the parts nobody points at, so the whole car reads as one considered idea, from your first sketch to the day you collect the keys.</p>
+      <a href="#contact" class="btn magnetic">Book a consultation <i></i></a>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars" id="pillars">
+    <div class="pillars__bg">
+      <div class="ph"></div><div class="ph" style="background:#3a3430"></div><div class="ph" style="background:#2c3236"></div>
+    </div>
+    <div class="pillars__inner">
+      <div class="pillars__media">
+        <div class="ph"><span class="ph__tag">Image</span><div class="ph__in"><span class="ph__n">05</span><span class="ph__t">Chrome bonnet ornament close-up, soft daylight</span></div></div>
+        <div class="ph" style="background:#3a3430"><span class="ph__tag">Image</span><div class="ph__in"><span class="ph__n">06</span><span class="ph__t">Designer sketching a car profile on paper, overhead shot</span></div></div>
+        <div class="ph" style="background:#2c3236"><span class="ph__tag">Image</span><div class="ph__in"><span class="ph__n">07</span><span class="ph__t">Finished car leaving the workshop at dusk, rear 3/4</span></div></div>
+      </div>
+      <div>
+        <div class="pillars__count"><span class="cur"><span>01</span><span>02</span><span>03</span></span><span style="color:var(--mute)">/ 03</span></div>
+        <div class="pillars__titles">
+          <h3>Character</h3><h3>Craft</h3><h3>Delivery</h3>
+        </div>
+        <div class="pillars__texts">
+          <p>We start with you: how you drive, where you go and what the car should say when it pulls up.</p>
+          <p>Specialists in trim, paint and lighting work in one room, so every choice is checked against the others.</p>
+          <p>A fixed timeline, photo updates every week, and a handover that walks you through every change.</p>
+        </div>
+        <a href="#contact" class="btn magnetic">Start a project <i></i></a>
+      </div>
+    </div>
+    <div class="pillars__progress"><span></span></div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="statement">
+    <div>
+      <h2 class="split fill">A car should feel finished before the engine turns. Every seam, edge and surface earns its place.</h2>
+      <p class="statement__body">Styling, interiors, lighting and protection, planned together so each one makes the others look better without shouting over them.</p>
+      <a href="#services" class="btn magnetic">See services <i></i></a>
+    </div>
+    <div class="statement__img"><div class="ph parallax"><span class="ph__tag">Image</span><div class="ph__in"><span class="ph__n">08</span><span class="ph__t">Forged wheel and carbon brake detail, low angle, portrait crop</span></div></div></div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <article class="svc">
+      <div class="svc__text"><span class="svc__num">01 / 04</span><p class="eyebrow">Service</p><h3>Interiors</h3><p>Leather, Alcantara, stitching and trim chosen for how they feel under your hands, not just how they look in a photo.</p><a href="#contact" class="btn magnetic">Enquire <i></i></a></div>
+      <div class="svc__media"><div class="ph"><div class="ph__in"><span class="ph__n">09</span><span class="ph__t">Sports seat in black suede with quilted pattern, side angle</span></div></div></div>
+    </article>
+    <article class="svc">
+      <div class="svc__text"><span class="svc__num">02 / 04</span><p class="eyebrow">Service</p><h3>Lighting</h3><p>Tinted lenses, custom DRL signatures and ambient cabin light, so the car is recognisable before you see its badge.</p><a href="#contact" class="btn magnetic">Enquire <i></i></a></div>
+      <div class="svc__media"><div class="ph" style="background:#262c30"><div class="ph__in"><span class="ph__n">10</span><span class="ph__t">Headlight close-up with LED ring lit, black body paint</span></div></div></div>
+    </article>
+    <article class="svc">
+      <div class="svc__text"><span class="svc__num">03 / 04</span><p class="eyebrow">Service</p><h3>Protection</h3><p>Clear, satin or coloured PPF that guards the paint while changing the finish in a way you can always undo.</p><a href="#contact" class="btn magnetic">Enquire <i></i></a></div>
+      <div class="svc__media"><div class="ph" style="background:#3a2624"><div class="ph__in"><span class="ph__n">11</span><span class="ph__t">Installer applying film to a red bonnet with squeegee, water droplets</span></div></div></div>
+    </article>
+    <article class="svc">
+      <div class="svc__text"><span class="svc__num">04 / 04</span><p class="eyebrow">Service</p><h3>Styling</h3><p>Aero, wheels and exterior trim matched to the car's original lines, with nothing bolted on for the sake of it.</p><a href="#contact" class="btn magnetic">Enquire <i></i></a></div>
+      <div class="svc__media"><div class="ph" style="background:#2e2e2e"><div class="ph__in"><span class="ph__n">12</span><span class="ph__t">Carbon side skirt and wheel arch detail, raking light</span></div></div></div>
+    </article>
+  </section>
+
+  <!-- TOP-DOWN -->
+  <section class="topdown" id="builds">
+    <div class="ph td-l"><div class="ph__in"><span class="ph__n">13</span><span class="ph__t">SUV, top-down view, on black</span></div></div>
+    <div class="ph td-c"><div class="ph__in"><span class="ph__n">14</span><span class="ph__t">Hero sports car, top-down view, on black</span></div></div>
+    <div class="ph td-r"><div class="ph__in"><span class="ph__n">15</span><span class="ph__t">Off-roader, top-down view, on black</span></div></div>
+    <p class="topdown__label eyebrow">Recent builds</p>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="contact">
+    <div class="cta__bg"><div class="ph"></div><div class="ph"></div><div class="ph"></div></div>
+    <p class="eyebrow">Ready when you are</p>
+    <h2 class="split">Make it<br>unmistakable</h2>
+    <a href="mailto:hello@vanta.example" class="btn magnetic">Start a project <i></i></a>
+    <a href="#top" class="cta__top" id="toTop">Back to top ↑</a>
+  </section>
+</main>
+
+<footer class="ftr">
+  <div class="ftr__grid">
+    <div><h4>Studio</h4><p style="font-size:14px;line-height:1.8;color:var(--mute);max-width:30ch">Unit 00, Placeholder Street<br>Your City, AB1 2CD</p></div>
+    <div><h4>Explore</h4><ul><li><a href="#pillars">Approach</a></li><li><a href="#services">Services</a></li><li><a href="#builds">Builds</a></li></ul></div>
+    <div><h4>Social</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">YouTube</a></li><li><a href="#">TikTok</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a href="mailto:hello@vanta.example">hello@vanta.example</a></li><li><a href="#">+00 000 000 000</a></li></ul></div>
+  </div>
+  <div class="ftr__brand">Vanta Atelier</div>
+  <div class="ftr__bottom"><span>© 2026 Vanta Atelier: practice project</span><span>Privacy · Cookies</span></div>
+</footer>
+
+<div class="progress" id="progress"></div>
+<div class="cursor" id="cursor"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
+/* --- split text into words (keeps <br>) --- */
+$$('.split').forEach(el => {
+  el.innerHTML = el.innerHTML.split(/(<br\s*\/?>)/).map(part =>
+    part.startsWith('<br') ? part :
+    part.split(/(\s+)/).map(t => t.trim() ? `<span class="w">${t}</span>` : t).join('')
+  ).join('');
+});
+
+/* --- smooth scroll --- */
+const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+lenis.stop();
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+/* --- loader --- */
+const loaderTl = gsap.timeline();
+loaderTl
+  .to('#loaderBar', { scaleX: 1, duration: 2.2, ease: 'power2.inOut' })
+  .to('.loader__line .w', { opacity: 1, filter: 'blur(0px)', stagger: .06, duration: .8, ease: 'power2.out' }, 0.2)
+  .to('#loaderActions', { opacity: 1, pointerEvents: 'auto', duration: .6 }, '-=.2')
+  .to('.loader__bar', { opacity: 0, duration: .4 }, '<');
+
+function enterSite() {
+  gsap.timeline()
+    .to('.loader__line .w', { opacity: 0, filter: 'blur(10px)', stagger: .02, duration: .4 })
+    .to('#loaderActions', { opacity: 0, duration: .3 }, 0)
+    .to('#loader', { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'expo.inOut' }, .3)
+    .add(() => { $('#loader').remove(); document.body.classList.remove('is-locked'); lenis.start(); heroIn(); }, '-=.3');
+}
+$('#enterBtn').addEventListener('click', enterSite);
+$('#enterBtn2').addEventListener('click', enterSite);
+
+/* --- hero intro + scroll --- */
+function heroIn() {
+  gsap.timeline()
+    .fromTo('.hero__cars .ph', { y: 60, filter: 'brightness(0)' }, { y: 0, filter: 'brightness(.25)', stagger: .12, duration: 1.4, ease: 'power3.out' })
+    .to('.hero__title .w', { opacity: 1, filter: 'blur(0px)', stagger: .07, duration: 1, ease: 'power2.out' }, .3)
+    .to('.hero__sub', { opacity: 1, duration: 1 }, '-=.5');
+}
+gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=120%', scrub: 1, pin: true } })
+  .to('.hero__cars .ph', { filter: 'brightness(1)', ease: 'none' }, 0)
+  .to('.hero__cars .ph:nth-child(1)', { xPercent: -30, scale: 1.15 }, 0)
+  .to('.hero__cars .ph:nth-child(3)', { xPercent: 30, scale: 1.15 }, 0)
+  .to('.hero__cars .ph:nth-child(2)', { scale: 1.35, y: '6vh' }, 0)
+  .to('.hero__title', { y: '-8vh', opacity: 0, filter: 'blur(10px)' }, .1)
+  .to('.hero__sub, .hero__scroll', { opacity: 0 }, 0)
+  .fromTo('.hero__bigword', { yPercent: 40 }, { yPercent: 0 }, 0);
+
+ScrollTrigger.create({ start: 200, onToggle: s => $('#hdr').classList.toggle('show-word', s.isActive) });
+
+/* --- intro: image grows to fullscreen, words sharpen behind --- */
+gsap.timeline({ scrollTrigger: { trigger: '.intro', start: 'top top', end: '+=150%', scrub: 1, pin: true } })
+  .to('.intro__words .w', { filter: 'blur(0px)', opacity: 1, stagger: .1, duration: .5 }, 0)
+  .to('.intro__img', { width: '100vw', height: '100vh', duration: 1, ease: 'power2.inOut' }, .5)
+  .to('.intro__caption', { opacity: 0, duration: .2 }, .5);
+
+/* --- marques --- */
+gsap.to('.marques__row .ph--logo', { opacity: 1, y: 0, stagger: .1, duration: .9, ease: 'power3.out',
+  scrollTrigger: { trigger: '.marques', start: 'top 70%' } });
+
+/* --- pillars pinned slider --- */
+(() => {
+  const n = 3;
+  const tl = gsap.timeline({ scrollTrigger: { trigger: '.pillars', start: 'top top', end: `+=${n * 100}%`, scrub: 1, pin: true } });
+  const media = $$('.pillars__media .ph'), bgs = $$('.pillars__bg .ph'), titles = $$('.pillars__titles h3'), texts = $$('.pillars__texts p');
+  for (let i = 1; i < n; i++) {
+    const at = i - .5;
+    tl.to(media[i], { clipPath: 'inset(0% 0 0 0)', duration: .6, ease: 'power2.inOut' }, at)
+      .to(bgs[i], { opacity: 1, duration: .6 }, at)
+      .to(titles[i - 1], { opacity: 0, filter: 'blur(12px)', y: -20, duration: .3 }, at)
+      .fromTo(titles[i], { y: 20 }, { opacity: 1, filter: 'blur(0px)', y: 0, duration: .3 }, at + .3)
+      .to(texts[i - 1], { opacity: 0, duration: .25 }, at)
+      .to(texts[i], { opacity: 1, duration: .25 }, at + .35)
+      .to('.pillars__count .cur span', { yPercent: -100 * i, duration: .4 }, at + .1);
+  }
+  tl.to('.pillars__progress span', { scaleX: 1, ease: 'none', duration: n }, 0);
+})();
+
+/* --- statement word fill --- */
+gsap.to('.statement h2 .w', { opacity: 1, stagger: .1, ease: 'none',
+  scrollTrigger: { trigger: '.statement h2', start: 'top 80%', end: 'bottom 40%', scrub: true } });
+gsap.fromTo('.parallax', { yPercent: -10 }, { yPercent: 10, ease: 'none',
+  scrollTrigger: { trigger: '.statement__img', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+/* --- services image reveal --- */
+$$('.svc').forEach(svc => {
+  const ph = $('.svc__media .ph', svc);
+  gsap.timeline({ scrollTrigger: { trigger: svc, start: 'top 85%', end: 'top 10%', scrub: 1 } })
+    .to(ph, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none' }, 0)
+    .to($('.ph__in', ph), { scale: 1, ease: 'none' }, 0);
+  gsap.from($$('.svc__text > *', svc), { opacity: 0, y: 30, stagger: .08, duration: .9, ease: 'power3.out',
+    scrollTrigger: { trigger: svc, start: 'top 60%' } });
+});
+
+/* --- top-down zoom --- */
+gsap.timeline({ scrollTrigger: { trigger: '.topdown', start: 'top top', end: '+=120%', scrub: 1, pin: true } })
+  .fromTo('.td-c', { scale: .6 }, { scale: 1.1, ease: 'none' }, 0)
+  .fromTo('.td-l', { xPercent: 40, scale: .6 }, { xPercent: -30, scale: 1, ease: 'none' }, 0)
+  .fromTo('.td-r', { xPercent: -40, scale: .6 }, { xPercent: 30, scale: 1, ease: 'none' }, 0);
+
+/* --- CTA --- */
+gsap.to('.cta h2 .w', { opacity: 1, y: 0, filter: 'blur(0px)', stagger: .12, duration: 1.1, ease: 'power3.out',
+  scrollTrigger: { trigger: '.cta', start: 'top 55%' } });
+gsap.fromTo('.cta__bg', { scale: 1.3 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'top top', scrub: true } });
+
+/* --- progress bar --- */
+gsap.to('#progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: .3 } });
+
+/* --- menu --- */
+let menuOpen = false;
+const menuTl = gsap.timeline({ paused: true })
+  .to('#menu', { clipPath: 'inset(0 0 0% 0)', duration: .9, ease: 'expo.inOut' })
+  .to('.menu__links a span', { y: 0, stagger: .06, duration: .8, ease: 'power3.out' }, '-=.4')
+  .from('.menu__side', { opacity: 0, duration: .6 }, '-=.6');
+function toggleMenu(force) {
+  menuOpen = force ?? !menuOpen;
+  document.body.classList.toggle('menu-open', menuOpen);
+  $('#menuBtn').setAttribute('aria-expanded', menuOpen);
+  $('#menu').setAttribute('aria-hidden', !menuOpen);
+  $('#menuLabel').textContent = menuOpen ? 'Close' : 'Menu';
+  menuOpen ? (menuTl.timeScale(1).play(), lenis.stop()) : (menuTl.timeScale(1.6).reverse(), lenis.start());
+}
+$('#menuBtn').addEventListener('click', () => toggleMenu());
+
+/* --- anchor links via lenis --- */
+$$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  const id = a.getAttribute('href'); if (id.length < 2) return;
+  e.preventDefault();
+  if (menuOpen) toggleMenu(false);
+  lenis.scrollTo(id, { duration: 1.6 });
+}));
+
+/* --- cursor + magnetic buttons --- */
+const cursor = $('#cursor');
+const cx = gsap.quickTo(cursor, 'x', { duration: .25, ease: 'power3' });
+const cy = gsap.quickTo(cursor, 'y', { duration: .25, ease: 'power3' });
+addEventListener('mousemove', e => { cursor.classList.add('on'); cx(e.clientX); cy(e.clientY); });
+$$('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+$$('.magnetic').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    gsap.to(el, { x: (e.clientX - r.left - r.width / 2) * .3, y: (e.clientY - r.top - r.height / 2) * .4, duration: .4 });
+  });
+  el.addEventListener('mouseleave', () => gsap.to(el, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1,.4)' }));
+});
+
+if (reduce) { gsap.globalTimeline.timeScale(20); }
+</script>
+</body>
+</html>

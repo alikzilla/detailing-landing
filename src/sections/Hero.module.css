@@ -1,0 +1,20 @@
+.hero{position:relative;height:100vh;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1c1c1c 0%,#050505 60%)}
+.cars{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2vw;padding:0 var(--gut)}
+.car{width:30vw;aspect-ratio:4/3;filter:brightness(.25);border-radius:2px}
+.car:nth-child(2){background:linear-gradient(135deg,#4a2a26,#6b3a33 50%,#4a2a26)}
+.title{position:absolute;left:0;right:0;top:16vh;text-align:center;z-index:3;pointer-events:none}
+.title h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,8vw,128px);line-height:.95}
+.title [data-word]{display:inline-block;opacity:0;filter:blur(14px)}
+.sub{position:absolute;bottom:70px;left:0;right:0;text-align:center;z-index:3;font-size:13px;letter-spacing:.06em;color:var(--mute);opacity:0}
+.scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:3;width:1px;height:28px;background:linear-gradient(var(--fg),transparent);animation:drip 2s infinite}
+@keyframes drip{0%{transform:translateX(-50%) scaleY(0);transform-origin:top}50%{transform:translateX(-50%) scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:translateX(-50%) scaleY(0);transform-origin:bottom}}
+.bigword{position:absolute;bottom:-4vw;left:0;right:0;text-align:center;font-family:var(--serif);font-size:28vw;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(200,64,46,.25);z-index:1;pointer-events:none;white-space:nowrap}
+
+@media (max-width:820px){
+  .cars{gap:8px}
+  .car{width:31vw}
+  .car [data-ph-text]{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .scroll{animation:none}
+}

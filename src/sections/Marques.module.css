@@ -1,0 +1,10 @@
+.marques{position:relative;padding:18vh var(--gut);display:grid;grid-template-columns:1.3fr 1fr;gap:6vw;align-items:center;border-top:1px solid var(--line)}
+.eyebrow{margin-bottom:28px}
+.row{display:flex;gap:32px;flex-wrap:wrap}
+.logo{opacity:0;transform:translateY(30px)}
+.note{margin-top:16px;font-size:12px;line-height:1.5;letter-spacing:.04em;color:#d6d6d6}
+.lead{font-size:clamp(16px,1.4vw,20px);line-height:1.6;max-width:36ch}
+
+@media (max-width:820px){
+  .marques{grid-template-columns:1fr}
+}

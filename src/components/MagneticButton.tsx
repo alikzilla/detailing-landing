@@ -3,7 +3,9 @@ import gsap from 'gsap';
 import s from './MagneticButton.module.css';
 
 /** Outline button that leans toward the mouse and springs back on leave. */
-export default function MagneticButton({ href, children }: { href: string; children: ReactNode }) {
+type Props = { href: string; children: ReactNode; /** preselects a service when the button opens the form */ service?: string };
+
+export default function MagneticButton({ href, children, service }: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   const onMove = (e: React.MouseEvent) => {
@@ -18,7 +20,7 @@ export default function MagneticButton({ href, children }: { href: string; child
   const onLeave = () => gsap.to(ref.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,.4)' });
 
   return (
-    <a ref={ref} href={href} className={s.btn} onMouseMove={onMove} onMouseLeave={onLeave}>
+    <a ref={ref} href={href} data-service={service} className={s.btn} onMouseMove={onMove} onMouseLeave={onLeave}>
       {children} <i className={s.arrow} />
     </a>
   );

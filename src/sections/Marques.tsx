@@ -20,15 +20,15 @@ export default function Marques() {
   return (
     <section className={s.marques} ref={root}>
       <div>
-        <p className={`eyebrow ${s.eyebrow}`}>Marques we work with</p>
+        <p className={`eyebrow ${s.eyebrow}`}>Марки, с которыми мы работаем</p>
         <div className={s.row}>
           {logos.map((n) => <Placeholder key={n} logo className={s.logo} n={n} />)}
         </div>
-        <p className={s.note}>L1–L5: brand logos in white, round badges (placeholders)</p>
+        <p className={s.note}>L1–L5: белые логотипы марок, круглые значки (заглушки)</p>
       </div>
       <div>
-        <p className={s.lead}>We sweat the parts nobody points at, so the whole car reads as one considered idea, from your first sketch to the day you collect the keys.</p>
-        <MagneticButton href="#contact">Book a consultation</MagneticButton>
+        <p className={s.lead}>Мы прорабатываем то, на что никто не обращает внимания, — чтобы машина читалась как одна цельная идея, от первого эскиза до дня, когда вы забираете ключи.</p>
+        <MagneticButton href="#form">Записаться на консультацию</MagneticButton>
       </div>
     </section>
   );

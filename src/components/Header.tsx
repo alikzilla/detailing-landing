@@ -22,12 +22,12 @@ export default function Header({ menuOpen, onToggleMenu }: Props) {
           <a key={x.short} href={x.href} aria-label={x.label}>{x.short}</a>
         ))}
       </div>
-      <a href="#top" className={s.logo} aria-label="Home">
+      <a href="/" className={s.logo} aria-label="На главную">
         <Logo />
         <small className={s.word}>VANTA</small>
       </a>
       <button className={`${s.menuBtn} ${menuOpen ? s.open : ''}`} aria-expanded={menuOpen} onClick={onToggleMenu}>
-        <span>{menuOpen ? 'Close' : 'Menu'}</span>
+        <span>{menuOpen ? 'Закрыть' : 'Меню'}</span>
         <span className={s.burger}><i /><i /></span>
       </button>
     </header>

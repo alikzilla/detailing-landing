@@ -22,12 +22,12 @@ export default function Statement() {
   return (
     <section className={s.statement} ref={root}>
       <div>
-        <h2 className={s.heading}><SplitWords text="A car should feel finished before the engine turns. Every seam, edge and surface earns its place." /></h2>
-        <p className={s.body}>Styling, interiors, lighting and protection, planned together so each one makes the others look better without shouting over them.</p>
-        <MagneticButton href="#services">See services</MagneticButton>
+        <h2 className={s.heading}><SplitWords text="Машина должна ощущаться законченной ещё до запуска двигателя. Каждый шов, грань и поверхность на своём месте." /></h2>
+        <p className={s.body}>Стайлинг, интерьер, свет и защита планируются вместе, чтобы каждое решение усиливало остальные, а не спорило с ними.</p>
+        <MagneticButton href="#services">Смотреть услуги</MagneticButton>
       </div>
       <div className={s.imgWrap}>
-        <Placeholder className={s.img} tag n="08" text="Forged wheel and carbon brake detail, low angle, portrait crop" />
+        <Placeholder className={s.img} tag n="08" text="Кованый диск и карбоновый тормоз, нижний ракурс, вертикальный кадр" />
       </div>
     </section>
   );

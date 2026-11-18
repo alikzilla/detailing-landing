@@ -35,7 +35,7 @@ export default function Menu({ open }: { open: boolean }) {
         ))}
       </div>
       <div className={s.side}>
-        <Placeholder className={s.sideImg} tag n="M1" text="Menu image: moody workshop shot, car under a single overhead light" />
+        <Placeholder className={s.sideImg} tag n="M1" text="Фото для меню: атмосферный цех, машина под одной лампой сверху" />
         <div className={s.meta}><span>{contact.email}</span><span>{contact.hours}</span></div>
       </div>
     </nav>

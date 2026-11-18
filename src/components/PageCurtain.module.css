@@ -1,0 +1,2 @@
+.curtain{position:fixed;inset:0;z-index:99;background:#000;display:grid;place-items:center;clip-path:inset(100% 0 0 0);pointer-events:none}
+.label{font-family:var(--serif);font-size:clamp(40px,6vw,88px);color:var(--fg);opacity:0}

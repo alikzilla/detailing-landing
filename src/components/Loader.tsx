@@ -38,8 +38,8 @@ export default function Loader({ onEnter }: { onEnter: () => void }) {
       <div className={s.mark}><Logo width={34} /></div>
       <p className={s.line}><SplitWords text={loaderLine} /></p>
       <div className={s.actions}>
-        <button onClick={exit}>Enter</button>
-        <button className={s.ghost} onClick={exit}>Skip intro</button>
+        <button onClick={exit}>Войти</button>
+        <button className={s.ghost} onClick={exit}>Пропустить</button>
       </div>
       <div className={s.bar}><span className={s.barFill} /></div>
     </div>

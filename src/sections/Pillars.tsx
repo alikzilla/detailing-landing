@@ -56,7 +56,7 @@ export default function Pillars() {
           </div>
           <div className={s.titles}>{pillars.map((p) => <h3 key={p.title}>{p.title}</h3>)}</div>
           <div className={s.texts}>{pillars.map((p) => <p key={p.title}>{p.text}</p>)}</div>
-          <MagneticButton href="#contact">Start a project</MagneticButton>
+          <MagneticButton href="#form">Начать проект</MagneticButton>
         </div>
       </div>
       <div className={s.progress}><span className={s.progressFill} /></div>

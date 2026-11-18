@@ -33,7 +33,11 @@ export default function Hero({ entered }: { entered: boolean }) {
       if (!entered) return;
       gsap
         .timeline()
-        .fromTo(car, { y: 60, filter: 'brightness(0)' }, { y: 0, filter: 'brightness(.25)', stagger: 0.12, duration: 1.4, ease: 'power3.out' })
+        // Start values come from CSS (.cars is shifted down, each .car is transparent), so nothing jumps
+        // when this runs. The wrapper carries the slide and each car only fades: the scroll timeline above
+        // owns the cars' transform and filter.
+        .to(`.${s.cars}`, { y: 0, duration: 1.4, ease: 'power3.out' })
+        .to(car, { opacity: 1, stagger: 0.12, duration: 1.2, ease: 'power2.out' }, 0)
         .to(`.${s.title} [data-word]`, { opacity: 1, filter: 'blur(0px)', stagger: 0.07, duration: 1, ease: 'power2.out' }, 0.3)
         .to(`.${s.sub}`, { opacity: 1, duration: 1 }, '-=.5');
     },
@@ -46,8 +50,8 @@ export default function Hero({ entered }: { entered: boolean }) {
       <div className={s.cars}>
         {heroCars.map((c) => <Placeholder key={c.n} className={s.car} n={c.n} text={c.text} />)}
       </div>
-      <div className={s.title}><h1><SplitWords text={'Made for drivers\nwho notice everything'} /></h1></div>
-      <p className={s.sub}>An independent studio for bespoke styling, interiors and protection.</p>
+      <div className={s.title}><h1><SplitWords text={'Для тех, кто\nзамечает всё'} /></h1></div>
+      <p className={s.sub}>Независимая студия индивидуального стайлинга, интерьеров и защиты.</p>
       <div className={s.scroll} />
     </section>
   );

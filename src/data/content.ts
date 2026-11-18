@@ -1,20 +1,20 @@
-// All copy and placeholder notes live here, so you can edit text without touching components.
+// Весь текст и подписи к заглушкам лежат здесь — меняйте копирайт, не трогая компоненты.
 
 export const loaderLine =
-  'Precision craft for cars that deserve a second signature, not a second-hand look.';
+  'Ручная работа для машин, которым нужен собственный почерк, а не чужие решения.';
 
 export const heroCars = [
-  { n: '01', text: 'Black SUV, front view, dark studio, cut-out on black' },
-  { n: '02', text: 'Hero sports car (red), front view, centred, cut-out on black' },
-  { n: '03', text: 'Grey off-roader, front view, dark studio, cut-out on black' },
+  { n: '01', text: 'Чёрный внедорожник, вид спереди, тёмная студия, вырезан на чёрном' },
+  { n: '02', text: 'Главный спорткар (красный), вид спереди, по центру, вырезан на чёрном' },
+  { n: '03', text: 'Серый рамный внедорожник, вид спереди, тёмная студия, вырезан на чёрном' },
 ];
 
 export const navLinks = [
-  { label: 'Home', href: '#top' },
-  { label: 'Approach', href: '#pillars' },
-  { label: 'Services', href: '#services' },
-  { label: 'Builds', href: '#builds' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Главная', href: '/' },
+  { label: 'Подход', href: '/#pillars' },
+  { label: 'Услуги', href: '/services' },
+  { label: 'Проекты', href: '/projects' },
+  { label: 'Контакты', href: '/#contact' },
 ];
 
 export const socials = [
@@ -25,61 +25,146 @@ export const socials = [
 
 export const pillars = [
   {
-    title: 'Character',
-    text: 'We start with you: how you drive, where you go and what the car should say when it pulls up.',
-    img: { n: '05', text: 'Chrome bonnet ornament close-up, soft daylight' },
+    title: 'Характер',
+    text: 'Начинаем с вас: как вы ездите, куда и что машина должна говорить о вас, когда подъезжает.',
+    img: { n: '05', text: 'Хромированная фигурка на капоте крупным планом, мягкий дневной свет' },
     tone: undefined,
   },
   {
-    title: 'Craft',
-    text: 'Specialists in trim, paint and lighting work in one room, so every choice is checked against the others.',
-    img: { n: '06', text: 'Designer sketching a car profile on paper, overhead shot' },
+    title: 'Мастерство',
+    text: 'Специалисты по салону, покраске и свету работают в одном цеху, поэтому каждое решение сверяется с остальными.',
+    img: { n: '06', text: 'Дизайнер рисует профиль автомобиля на бумаге, съёмка сверху' },
     tone: '#3a3430',
   },
   {
-    title: 'Delivery',
-    text: 'A fixed timeline, photo updates every week, and a handover that walks you through every change.',
-    img: { n: '07', text: 'Finished car leaving the workshop at dusk, rear 3/4' },
+    title: 'Сдача',
+    text: 'Фиксированные сроки, фотоотчёт каждую неделю и передача машины с разбором каждого изменения.',
+    img: { n: '07', text: 'Готовый автомобиль выезжает из цеха в сумерках, вид сзади 3/4' },
     tone: '#2c3236',
   },
 ];
 
-export const services = [
+export type Service = {
+  title: string;
+  text: string;
+  includes: string[];
+  duration: string;
+  price: string;
+  img: { n: string; text: string };
+  tone?: string;
+};
+
+export const services: Service[] = [
   {
-    title: 'Interiors',
-    text: 'Leather, Alcantara, stitching and trim chosen for how they feel under your hands, not just how they look in a photo.',
-    img: { n: '09', text: 'Sports seat in black suede with quilted pattern, side angle' },
-    tone: undefined,
+    title: 'Интерьер',
+    text: 'Кожа, алькантара, строчка и отделка, подобранные по ощущению в руках, а не только по тому, как они смотрятся на фото.',
+    includes: ['Перетяжка сидений и руля', 'Потолок и стойки в алькантаре', 'Контрастная строчка и перфорация', 'Шумоизоляция салона'],
+    duration: 'от 7 дней',
+    price: 'от 450 000 ₸',
+    img: { n: '09', text: 'Спортивное кресло в чёрной замше со стёжкой, вид сбоку' },
   },
   {
-    title: 'Lighting',
-    text: 'Tinted lenses, custom DRL signatures and ambient cabin light, so the car is recognisable before you see its badge.',
-    img: { n: '10', text: 'Headlight close-up with LED ring lit, black body paint' },
+    title: 'Свет',
+    text: 'Тонировка фар, собственная подпись ходовых огней и подсветка салона — машину узнают раньше, чем увидят значок.',
+    includes: ['Тонировка и полировка фар', 'Уникальные ходовые огни', 'Контурная подсветка салона', 'Замена линз и ламп'],
+    duration: 'от 2 дней',
+    price: 'от 120 000 ₸',
+    img: { n: '10', text: 'Фара крупным планом с горящим LED-кольцом, чёрный кузов' },
     tone: '#262c30',
   },
   {
-    title: 'Protection',
-    text: 'Clear, satin or coloured PPF that guards the paint while changing the finish in a way you can always undo.',
-    img: { n: '11', text: 'Installer applying film to a red bonnet with squeegee, water droplets' },
+    title: 'Защита',
+    text: 'Прозрачная, матовая или цветная плёнка: защищает лак и меняет финиш так, что всё можно вернуть как было.',
+    includes: ['Полиуретановая плёнка на кузов', 'Матовый и цветной финиш', 'Защита зон риска', 'Гарантия на материал'],
+    duration: 'от 3 дней',
+    price: 'от 350 000 ₸',
+    img: { n: '11', text: 'Мастер клеит плёнку на красный капот ракелем, капли воды' },
     tone: '#3a2624',
   },
   {
-    title: 'Styling',
-    text: "Aero, wheels and exterior trim matched to the car's original lines, with nothing bolted on for the sake of it.",
-    img: { n: '12', text: 'Carbon side skirt and wheel arch detail, raking light' },
+    title: 'Стайлинг',
+    text: 'Аэродинамика, диски и внешние детали в линию с заводским дизайном — ничего лишнего ради галочки.',
+    includes: ['Карбоновые обвесы и спойлеры', 'Подбор и установка дисков', 'Окрас деталей в цвет', 'Антихром'],
+    duration: 'от 5 дней',
+    price: 'от 600 000 ₸',
+    img: { n: '12', text: 'Карбоновый порог и арка крупным планом, скользящий свет' },
     tone: '#2e2e2e',
+  },
+  {
+    title: 'Детейлинг',
+    text: 'Глубокая мойка, коррекция лака и керамика — возвращаем заводской блеск и держим его годами.',
+    includes: ['Многоэтапная полировка', 'Керамическое покрытие', 'Химчистка салона', 'Обработка дисков и стёкол'],
+    duration: 'от 1 дня',
+    price: 'от 80 000 ₸',
+    img: { n: '16', text: 'Отражение ламп в отполированном чёрном капоте, крупный план' },
+    tone: '#2a2f2c',
   },
 ];
 
-export const topDown = [
-  { n: '13', text: 'SUV, top-down view, on black' },
-  { n: '14', text: 'Hero sports car, top-down view, on black', center: true },
-  { n: '15', text: 'Off-roader, top-down view, on black' },
+export type Project = {
+  title: string;
+  car: string;
+  year: string;
+  works: string[];
+  img: { n: string; text: string };
+  tone?: string;
+};
+
+export const projects: Project[] = [
+  {
+    title: 'Ночной патруль',
+    car: 'Чёрный внедорожник',
+    year: '2026',
+    works: ['Антихром', 'Тонировка фар', 'Салон в алькантаре'],
+    img: { n: 'P1', text: 'Чёрный внедорожник ночью под уличным светом, вид спереди 3/4' },
+  },
+  {
+    title: 'Красная линия',
+    car: 'Спорткар',
+    year: '2026',
+    works: ['Карбоновый обвес', 'Глянцевая плёнка', 'Кованые диски'],
+    img: { n: 'P2', text: 'Красный спорткар в студии, низкий ракурс сбоку' },
+    tone: '#3d2420',
+  },
+  {
+    title: 'Графит',
+    car: 'Рамный внедорожник',
+    year: '2025',
+    works: ['Матовая плёнка', 'Свет', 'Шумоизоляция'],
+    img: { n: 'P3', text: 'Графитовый внедорожник в горах, вид сзади 3/4' },
+    tone: '#2b2f33',
+  },
+  {
+    title: 'Белый шум',
+    car: 'Бизнес-седан',
+    year: '2025',
+    works: ['Керамика', 'Перетяжка салона', 'Подсветка'],
+    img: { n: 'P4', text: 'Белый седан у стеклянного фасада, мягкий дневной свет' },
+    tone: '#34322e',
+  },
+  {
+    title: 'Изумруд',
+    car: 'Гран-туризмо',
+    year: '2024',
+    works: ['Цветная плёнка', 'Детейлинг', 'Строчка салона'],
+    img: { n: 'P5', text: 'Тёмно-зелёное купе на мокром асфальте, отражения огней' },
+    tone: '#23302a',
+  },
 ];
+
 
 export const contact = {
   email: 'hello@vanta.example',
-  phone: '+00 000 000 000',
-  hours: 'Mon–Sat · 09:00–19:00',
-  address: ['Unit 00, Placeholder Street', 'Your City, AB1 2CD'],
+  phone: '+7 000 000 00 00',
+  hours: 'Пн–Сб · 09:00–19:00',
+};
+
+export const form = {
+  title: 'Расскажите\nо проекте',
+  intro: 'Оставьте пару деталей — мы перезвоним в течение рабочего дня и предложим время для консультации.',
+  services: ['Интерьер', 'Свет', 'Защита', 'Стайлинг', 'Другое'],
+  budgets: ['до 500 000 ₸', '500 000 – 1 500 000 ₸', '1 500 000 – 5 000 000 ₸', 'от 5 000 000 ₸', 'Пока не знаю'],
+  consent: 'Нажимая «Отправить», вы соглашаетесь на обработку персональных данных.',
+  successTitle: 'Спасибо!',
+  successText: 'Заявка принята. Мы свяжемся с вами в течение рабочего дня.',
 };

@@ -23,11 +23,11 @@ export default function Intro() {
   return (
     <section className={s.intro} ref={root}>
       <div className={s.words}>
-        <span><SplitWords text="Quiet details," /></span>
-        <span><SplitWords text="loud presence." /></span>
+        <span><SplitWords text="Тихие детали," /></span>
+        <span><SplitWords text="громкий характер." /></span>
       </div>
-      <Placeholder className={s.img} tag n="04" text="Macro: hand-stitched leather with coloured thread, shallow depth of field" />
-      <p className={s.caption}>Every build starts with the smallest decision.</p>
+      <Placeholder className={s.img} tag n="04" text="Макро: кожа с ручной строчкой цветной нитью, малая глубина резкости" />
+      <p className={s.caption}>Каждый проект начинается с самой маленькой детали.</p>
     </section>
   );
 }

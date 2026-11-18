@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './styles/global.css';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -15,6 +16,8 @@ window.scrollTo(0, 0);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StrictMode>,
 );

@@ -1,0 +1,23 @@
+.scroller{position:relative}
+.panel{position:relative;height:100vh;height:100svh;overflow:hidden}
+
+/* fixed HUD: counter bottom-left, item list right */
+.hud{position:fixed;inset:auto 0 0 0;z-index:50;display:flex;justify-content:space-between;align-items:flex-end;padding:0 var(--gut) 28px;pointer-events:none;mix-blend-mode:difference}
+.counter{display:flex;align-items:baseline;gap:14px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600}
+.digits{font-family:var(--serif);font-size:28px;letter-spacing:0;height:28px;line-height:28px;overflow:hidden;display:inline-block}
+.digitsStack{display:block;transition:transform .6s cubic-bezier(.7,0,.2,1)}
+.digitsStack span{display:block;height:28px}
+.total{font-family:var(--serif);font-size:16px;letter-spacing:0;color:#9a9893}
+.hint{font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:#9a9893}
+
+.nav{position:fixed;right:var(--gut);top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:12px;mix-blend-mode:difference}
+.nav button{display:flex;align-items:center;gap:12px;justify-content:flex-end;font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#8f8d88;transition:color .4s}
+.nav button i{display:block;width:16px;height:1px;background:currentColor;transition:width .4s}
+.nav button.active{color:#fff}
+.nav button.active i{width:40px}
+.nav button:focus-visible{outline:1px solid #fff;outline-offset:4px}
+
+@media (max-width:820px){
+  .nav{display:none}
+  .hint{display:none}
+}

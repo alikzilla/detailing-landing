@@ -19,7 +19,7 @@ export default function Placeholder({ n, text, tag, logo, className, style }: Pr
   const cls = [s.ph, logo && s.logo, className].filter(Boolean).join(' ');
   return (
     <div className={cls} style={style}>
-      {tag && <span className={s.tag}>Image</span>}
+      {tag && <span className={s.tag}>Фото</span>}
       {(n || text) && (
         <div className={s.inner} data-ph-inner>
           {n && <span className={s.num}>{n}</span>}

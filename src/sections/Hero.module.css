@@ -1,6 +1,6 @@
 .hero{position:relative;height:100vh;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1c1c1c 0%,#050505 60%)}
-.cars{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2vw;padding:0 var(--gut)}
-.car{width:30vw;aspect-ratio:4/3;filter:brightness(.25);border-radius:2px}
+.cars{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2vw;padding:0 var(--gut);transform:translateY(60px)}
+.car{width:30vw;aspect-ratio:4/3;filter:brightness(.25);border-radius:2px;opacity:0}
 .car:nth-child(2){background:linear-gradient(135deg,#4a2a26,#6b3a33 50%,#4a2a26)}
 .title{position:absolute;left:0;right:0;top:16vh;text-align:center;z-index:3;pointer-events:none}
 .title h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,8vw,128px);line-height:.95}
